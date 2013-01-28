@@ -1,0 +1,1 @@
+include (../NuttySliderApp.pro)
