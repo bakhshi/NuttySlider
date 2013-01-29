@@ -20,40 +20,40 @@ Page {
 //            preferredWidth: 600
         }
         Label {
-            horizontalAlignment: HorizontalAlignment.Center
+//            horizontalAlignment: HorizontalAlignment.Center
             verticalAlignment: VerticalAlignment.Top
-            text: nutty.value
+            text: "value : " + nutty.value
         }
         Label {
-            horizontalAlignment: HorizontalAlignment.Center
+//            horizontalAlignment: HorizontalAlignment.Center
             verticalAlignment: VerticalAlignment.Bottom
-            text: nutty.immediateValue
+            text: "immediateValue : " + nutty.immediateValue
         }
-        ImageView {
-            property real size: 1
-            imageSource: "asset:///images/handle_pressed.png"
-            preferredWidth: size
-            preferredHeight: size
-            onTouch: {
-                if(event.touchType == TouchType.Down) {
-                    size = 100;
-                } else if(event.touchType == TouchType.Up) {
-                    size = 1;
-                }
-
-            }
-            verticalAlignment: VerticalAlignment.Center
-            horizontalAlignment: HorizontalAlignment.Center
-            touchBehaviors: [
-                TouchBehavior {
-                    TouchReaction {
-                        eventType: TouchType.Down
-                        phase: PropagationPhase.AtTarget
-                        response: TouchResponse.StartTracking
-                    }
-                }
-            ]
-        }
+//        ImageView {
+//            property real size: 1
+//            imageSource: "asset:///images/handle_pressed.png"
+//            preferredWidth: size
+//            preferredHeight: size
+//            onTouch: {
+//                if(event.touchType == TouchType.Down) {
+//                    size = 100;
+//                } else if(event.touchType == TouchType.Up) {
+//                    size = 1;
+//                }
+//
+//            }
+//            verticalAlignment: VerticalAlignment.Center
+//            horizontalAlignment: HorizontalAlignment.Center
+//            touchBehaviors: [
+//                TouchBehavior {
+//                    TouchReaction {
+//                        eventType: TouchType.Down
+//                        phase: PropagationPhase.AtTarget
+//                        response: TouchResponse.StartTracking
+//                    }
+//                }
+//            ]
+//        }
     }
 }
 

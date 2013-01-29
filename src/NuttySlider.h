@@ -69,6 +69,7 @@ private:
     bb::cascades::ImageView* m_handle;
     bb::cascades::Image m_handleOnImg;
     bb::cascades::Image m_handleOffImg;
+    bb::cascades::ImageView* m_progressImageView;
     float m_value;
     float m_fromValue;
     float m_toValue;

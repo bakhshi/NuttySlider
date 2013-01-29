@@ -133,10 +133,25 @@ void NuttySlider::createProgressBar()
                                     - progressBarHeight) / 2);
 
     m_progressBar = bb::cascades::Container::create()
-                    .layout(new bb::cascades::AbsoluteLayout())
+                    .layout(new bb::cascades::DockLayout())
                     .layoutProperties(layoutProperties)
                     .preferredHeight(progressBarHeight)
                     .background(bb::cascades::Color::fromARGB(0xfffddded));
+
+    bb::cascades::ImageView* barImageView =
+            bb::cascades::ImageView::create("asset:///images/bar.amd")
+                                    .preferredHeight(m_preferredHeight)
+                                    .preferredWidth(m_width - m_preferredHeight)
+                                    .horizontal(bb::cascades::HorizontalAlignment::Fill)
+                                    .vertical(bb::cascades::VerticalAlignment::Center);
+
+    m_progressImageView = bb::cascades::ImageView::create("asset:///images/progress.amd")
+                                    .preferredHeight(m_preferredHeight)
+                                    .preferredWidth(m_width - m_preferredHeight)
+                                    .horizontal(bb::cascades::HorizontalAlignment::Left)
+                                    .vertical(bb::cascades::VerticalAlignment::Center);
+    m_progressBar->add(barImageView);
+    m_progressBar->add(m_progressImageView);
 }
 
 void NuttySlider::createHandle()
@@ -163,8 +178,6 @@ void NuttySlider::sliderHandleTouched(bb::cascades::TouchEvent* event)
 {
     bb::cascades::TouchType::Type type = event->touchType();
 
-
-
     if(bb::cascades::TouchType::Down == type) {
         bb::cascades::AbsoluteLayoutProperties* layoutProperties
         = dynamic_cast<bb::cascades::AbsoluteLayoutProperties*>(m_handle->layoutProperties());
@@ -189,6 +202,7 @@ void NuttySlider::sliderHandleTouched(bb::cascades::TouchEvent* event)
             return;
         float handlePosX = layoutProperties->positionX();
         setImmediateValue(fromPosXToValue(handlePosX));
+        m_progressImageView->setPreferredWidth(handlePosX);
         qDebug() << "event localX : " << event->localX() - m_dx;
     }
 
@@ -236,6 +250,7 @@ void NuttySlider::setHandlePosX()
                             = bb::cascades::AbsoluteLayoutProperties::create();
     layoutProperties->setPositionX(x);
     m_handle->setLayoutProperties(layoutProperties);
+    m_progressImageView->setPreferredWidth(x);
 }
 
 float NuttySlider::fromValueToPosX(float value) const
