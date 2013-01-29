@@ -19,9 +19,12 @@
 
 NuttySlider::NuttySlider(bb::cascades::Container* parent)
     :CustomControl(parent),
-     m_value(0),
+     m_fromValue(0.0),
+     m_toValue(1.0),
      m_preferredHeight(100)
 {
+    setValue(m_fromValue);
+    setImmediateValue(m_fromValue);
     setPreferredHeight(m_preferredHeight);
     m_rootContainer = bb::cascades::Container::create()
                   .layout(new bb::cascades::AbsoluteLayout())
@@ -50,6 +53,48 @@ void NuttySlider::setValue(float value)
     emit valueChanged(m_value);
 }
 
+float NuttySlider::fromValue() const
+{
+    return m_fromValue;
+}
+
+void NuttySlider::setFromValue(float value)
+{
+    if(m_fromValue == value)
+        return;
+
+    m_fromValue = value;
+    emit fromValueChanged(m_fromValue);
+}
+
+float NuttySlider::toValue() const
+{
+    return m_toValue;
+}
+
+void NuttySlider::setToValue(float value)
+{
+    if(m_toValue == value)
+        return;
+
+    m_toValue = value;
+    emit toValueChanged(m_toValue);
+}
+
+float NuttySlider::immediateValue() const
+{
+    return m_immediateValue;
+}
+
+void NuttySlider::setImmediateValue(float value)
+{
+    if(m_immediateValue == value)
+        return;
+
+    m_immediateValue = value;
+    emit immediateValueChanged(m_immediateValue);
+}
+
 float NuttySlider::preferredHeight() const
 {
     return m_preferredHeight;
@@ -61,6 +106,7 @@ void NuttySlider::handleLayoutFrameUpdated(QRectF frame)
                                      - m_preferredHeight);
     m_width = frame.width();
     m_positionX = frame.x();
+    setHandlePosX();
     qDebug() << "frame width : " << frame.width();
     qDebug() << "frame x : " << frame.x();
     qDebug() << "frame y : " << frame.y();
@@ -72,6 +118,9 @@ void NuttySlider::createConnections()
         .onLayoutFrameChanged(this, SLOT(handleLayoutFrameUpdated(QRectF)));
     connect(m_handle, SIGNAL(touch(bb::cascades::TouchEvent*)),
             this, SLOT(sliderHandleTouched(bb::cascades::TouchEvent*)));
+    connect(this, SIGNAL(valueChanged(float)), this, SLOT(setHandlePosX()));
+    connect(this, SIGNAL(fromValueChanged(float)), this, SLOT(setHandlePosX()));
+    connect(this, SIGNAL(toValueChanged(float)), this, SLOT(setHandlePosX()));
 }
 
 void NuttySlider::createProgressBar()
@@ -114,24 +163,44 @@ void NuttySlider::sliderHandleTouched(bb::cascades::TouchEvent* event)
 {
     bb::cascades::TouchType::Type type = event->touchType();
 
+
+
     if(bb::cascades::TouchType::Down == type) {
-        m_handle->setImage(m_handleOnImg);
         bb::cascades::AbsoluteLayoutProperties* layoutProperties
         = dynamic_cast<bb::cascades::AbsoluteLayoutProperties*>(m_handle->layoutProperties());
         if(!layoutProperties)
             return;
         float handlePosX = layoutProperties->positionX();
+        m_handle->setImage(m_handleOnImg);
         m_dx = event->localX() - handlePosX;
+        m_handleX = handlePosX;
+        m_initX = event->localX();
         delete layoutProperties;
-        qDebug("down");
+
+        qDebug() << "handlePosX : " << handlePosX;
     }
 
     if(bb::cascades::TouchType::Move == type) {
-        setHandlePosX(event->localX() - m_dx);
+
+        setHandlePosX(m_handleX - m_initX + event->localX());
+        bb::cascades::AbsoluteLayoutProperties* layoutProperties
+        = dynamic_cast<bb::cascades::AbsoluteLayoutProperties*>(m_handle->layoutProperties());
+        if(!layoutProperties)
+            return;
+        float handlePosX = layoutProperties->positionX();
+        setImmediateValue(fromPosXToValue(handlePosX));
+        qDebug() << "event localX : " << event->localX() - m_dx;
     }
 
     if(bb::cascades::TouchType::Up == type) {
+
         m_handle->setImage(m_handleOffImg);
+        bb::cascades::AbsoluteLayoutProperties* layoutProperties
+        = dynamic_cast<bb::cascades::AbsoluteLayoutProperties*>(m_handle->layoutProperties());
+        if(!layoutProperties)
+            return;
+        float handlePosX = layoutProperties->positionX();
+        setValue(fromPosXToValue(handlePosX));
     }
 
     if(bb::cascades::TouchType::Cancel == type) {
@@ -151,4 +220,34 @@ void NuttySlider::setHandlePosX(float x)
                             = bb::cascades::AbsoluteLayoutProperties::create();
     layoutProperties->setPositionX(x);
     m_handle->setLayoutProperties(layoutProperties);
+}
+
+void NuttySlider::setHandlePosX()
+{
+    float startX = 0;
+    float endX = m_width - m_preferredHeight;
+    float x = fromValueToPosX(m_value);
+    if(x < startX)
+        x = startX;
+    if(x > endX)
+        x = endX;
+
+    bb::cascades::AbsoluteLayoutProperties* layoutProperties
+                            = bb::cascades::AbsoluteLayoutProperties::create();
+    layoutProperties->setPositionX(x);
+    m_handle->setLayoutProperties(layoutProperties);
+}
+
+float NuttySlider::fromValueToPosX(float value) const
+{
+    float factor = (value - m_fromValue) / (m_toValue - m_fromValue);
+
+    return (m_width - m_preferredHeight) * factor;
+}
+
+float NuttySlider::fromPosXToValue(float posX) const
+{
+    float factor = posX / (m_width - m_preferredHeight);
+
+    return factor * (m_toValue - m_fromValue) + m_fromValue;
 }

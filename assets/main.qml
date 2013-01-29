@@ -13,9 +13,21 @@ Page {
 //            horizontalAlignment: HorizontalAlignment.Center
 //        }
         NuttySlider {
-            horizontalAlignment: HorizontalAlignment.Center
+            id: nutty
+            horizontalAlignment: HorizontalAlignment.Fill
             verticalAlignment: VerticalAlignment.Center
-            preferredWidth: 600
+            value: 0.7
+//            preferredWidth: 600
+        }
+        Label {
+            horizontalAlignment: HorizontalAlignment.Center
+            verticalAlignment: VerticalAlignment.Top
+            text: nutty.value
+        }
+        Label {
+            horizontalAlignment: HorizontalAlignment.Center
+            verticalAlignment: VerticalAlignment.Bottom
+            text: nutty.immediateValue
         }
         ImageView {
             property real size: 1

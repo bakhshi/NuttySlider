@@ -24,15 +24,31 @@ class NuttySlider : public bb::cascades::CustomControl {
 
     Q_PROPERTY(float value READ value WRITE setValue NOTIFY valueChanged FINAL)
     Q_PROPERTY(float preferredHeight READ preferredHeight FINAL)
+    Q_PROPERTY(float fromValue READ fromValue WRITE setFromValue NOTIFY fromValueChanged FINAL)
+    Q_PROPERTY(float toValue READ toValue WRITE setToValue NOTIFY toValueChanged FINAL)
+    Q_PROPERTY(float immediateValue READ immediateValue WRITE setImmediateValue NOTIFY immediateValueChanged FINAL)
 
 public:
     NuttySlider(bb::cascades::Container *parent = 0);
     float value() const;
     void setValue(float value);
+
+    float fromValue() const;
+    void setFromValue(float value);
+
+    float toValue() const;
+    void setToValue(float value);
+
+    float immediateValue() const;
+    void setImmediateValue(float value);
+
     float preferredHeight() const;
 
  Q_SIGNALS:
     void valueChanged(float value);
+    void fromValueChanged(float value);
+    void toValueChanged(float value);
+    void immediateValueChanged(float value);
 
 private Q_SLOTS:
     void handleLayoutFrameUpdated(QRectF frame);
@@ -43,6 +59,9 @@ private:
     void createProgressBar();
     void createHandle();
     void setHandlePosX(float x);
+    void setHandlePosX();
+    float fromValueToPosX(float value) const;
+    float fromPosXToValue(float posX) const;
 
 private:
     bb::cascades::Container* m_rootContainer;
@@ -51,10 +70,15 @@ private:
     bb::cascades::Image m_handleOnImg;
     bb::cascades::Image m_handleOffImg;
     float m_value;
+    float m_fromValue;
+    float m_toValue;
+    float m_immediateValue;
     const float m_preferredHeight;
     bb::cascades::AbsoluteLayoutProperties* m_handleLayoutProperties;
     float m_width;
     float m_positionX;
+    float m_initX;
+    float m_handleX;
     float m_dx;
 };
 
