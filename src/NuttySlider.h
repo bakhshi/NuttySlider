@@ -53,6 +53,7 @@ public:
 private Q_SLOTS:
     void handleLayoutFrameUpdated(QRectF frame);
     void sliderHandleTouched(bb::cascades::TouchEvent* event);
+    void handleProgressWidthChanged(float width);
 
 private:
     void createConnections();

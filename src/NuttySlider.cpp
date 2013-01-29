@@ -121,6 +121,8 @@ void NuttySlider::createConnections()
     connect(this, SIGNAL(valueChanged(float)), this, SLOT(setHandlePosX()));
     connect(this, SIGNAL(fromValueChanged(float)), this, SLOT(setHandlePosX()));
     connect(this, SIGNAL(toValueChanged(float)), this, SLOT(setHandlePosX()));
+    connect(m_progressImageView, SIGNAL(preferredWidthChanged(float)),
+             this, SLOT(handleProgressWidthChanged(float)));
 }
 
 void NuttySlider::createProgressBar()
@@ -179,23 +181,26 @@ void NuttySlider::sliderHandleTouched(bb::cascades::TouchEvent* event)
     bb::cascades::TouchType::Type type = event->touchType();
 
     if(bb::cascades::TouchType::Down == type) {
+        m_initX = event->windowX();
         bb::cascades::AbsoluteLayoutProperties* layoutProperties
         = dynamic_cast<bb::cascades::AbsoluteLayoutProperties*>(m_handle->layoutProperties());
         if(!layoutProperties)
             return;
-        float handlePosX = layoutProperties->positionX();
+        float handlePosX = layoutProperties->positionX() + m_positionX;
         m_handle->setImage(m_handleOnImg);
         m_dx = event->localX() - handlePosX;
         m_handleX = handlePosX;
-        m_initX = event->localX();
+
         delete layoutProperties;
 
         qDebug() << "handlePosX : " << handlePosX;
     }
 
     if(bb::cascades::TouchType::Move == type) {
-
-        setHandlePosX(m_handleX - m_initX + event->localX());
+        qDebug() << "Initx : " << m_initX;
+        qDebug() << "handlex : " << m_handleX;
+        qDebug() << "dx : " <<  - m_initX + event->windowX();
+        setHandlePosX(m_handleX - m_initX + event->windowX());
         bb::cascades::AbsoluteLayoutProperties* layoutProperties
         = dynamic_cast<bb::cascades::AbsoluteLayoutProperties*>(m_handle->layoutProperties());
         if(!layoutProperties)
@@ -265,4 +270,13 @@ float NuttySlider::fromPosXToValue(float posX) const
     float factor = posX / (m_width - m_preferredHeight);
 
     return factor * (m_toValue - m_fromValue) + m_fromValue;
+}
+
+void NuttySlider::handleProgressWidthChanged(float width)
+{
+    if(!width)
+        m_progressImageView->setVisible(false);
+    else {
+        m_progressImageView->setVisible(true);
+    }
 }
