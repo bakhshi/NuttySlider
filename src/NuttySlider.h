@@ -19,7 +19,9 @@ namespace bb {
     }
 }
 
-class NuttySlider : public bb::cascades::CustomControl {
+using namespace bb::cascades;
+
+class NuttySlider : public CustomControl {
     Q_OBJECT
 
     Q_PROPERTY(float value READ value WRITE setValue NOTIFY valueChanged FINAL)
@@ -29,7 +31,7 @@ class NuttySlider : public bb::cascades::CustomControl {
     Q_PROPERTY(float immediateValue READ immediateValue WRITE setImmediateValue NOTIFY immediateValueChanged FINAL)
 
 public:
-    NuttySlider(bb::cascades::Container* parent = 0);
+    NuttySlider(Container* parent = 0);
     float value() const;
     void setValue(float value);
 
@@ -54,46 +56,49 @@ private Q_SLOTS:
     void handleLayoutFrameUpdated(QRectF frame);
     void sliderHandleTouched(bb::cascades::TouchEvent* event);
     void progressBarTouched(bb::cascades::TouchEvent* event);
-    void handleProgressWidthChanged(float width);
+    void updateHandlePositionX();
 
 private:
     void createConnections();
     void createProgressBar();
     void createHandle();
-    void setHandlePosX(float x);
-    void updateHandlePosX();
+
+
     float fromValueToPosX(float value) const;
-    float fromPosXToValue(float posX) const;
+    float fromPosXToValue(float positionX) const;
 
 private:
     // root container
-    bb::cascades::Container* m_rootContainer;
+    Container* m_rootContainer;
     float m_rootContainerWidth;
     float m_rootContainerHeight;
     float m_rootContainerPositionX;
 
 
     // progress bar
-    bb::cascades::Container* m_progressBarContainer;
+    Container* m_progressBarContainer;
     const float m_progressBarContainerHeight;
-    bb::cascades::Image m_progressBarImage;
-    bb::cascades::Image m_progressBarImagePressed;
+    ImageView* m_progressBarImageView;
+    Image m_progressBarImage;
+    Image m_progressBarImagePressed;
 
+    // handle
+    ImageView* m_handle;
+    Image m_handleOnImg;
+    Image m_handleOffImg;
 
-    bb::cascades::ImageView* m_handle;
-    bb::cascades::Image m_handleOnImg;
-    bb::cascades::Image m_handleOffImg;
-    bb::cascades::ImageView* m_progressImageView;
+    // properties
     float m_value;
     float m_fromValue;
     float m_toValue;
     float m_immediateValue;
 
-    bb::cascades::AbsoluteLayoutProperties* m_handleLayoutProperties;
+    AbsoluteLayoutProperties* m_handleLayoutProperties;
 
-    float m_initX;
-    float m_handleX;
-    float m_dx;
+    float m_touchEventInitX;
+    float m_handleInitX;
+
+    bool m_handleTouched;
 };
 
 #endif /* NUTTYSLIDER_H_ */

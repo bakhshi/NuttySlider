@@ -16,19 +16,19 @@ Page {
             id: nutty
             horizontalAlignment: HorizontalAlignment.Fill
             verticalAlignment: VerticalAlignment.Center
-            value: 0.001
+            value: 0
 //            preferredWidth: 600
         }
-//        Label {
-////            horizontalAlignment: HorizontalAlignment.Center
-//            verticalAlignment: VerticalAlignment.Top
-//            text: "value : " + nutty.value
-//        }
-//        Label {
-////            horizontalAlignment: HorizontalAlignment.Center
-//            verticalAlignment: VerticalAlignment.Bottom
-//            text: "immediateValue : " + nutty.immediateValue
-//        }
+        Label {
+//            horizontalAlignment: HorizontalAlignment.Center
+            verticalAlignment: VerticalAlignment.Top
+            text: "value : " + nutty.value
+        }
+        Label {
+//            horizontalAlignment: HorizontalAlignment.Center
+            verticalAlignment: VerticalAlignment.Bottom
+            text: "immediateValue : " + nutty.immediateValue
+        }
 //        ImageView {
 //            property real size: 1
 //            imageSource: "asset:///images/handle_pressed.png"
