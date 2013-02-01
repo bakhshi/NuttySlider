@@ -17,7 +17,13 @@ Page {
             horizontalAlignment: HorizontalAlignment.Fill
             verticalAlignment: VerticalAlignment.Center
             value: 0
+            enabled: false
 //            preferredWidth: 600
+        }
+        Slider {
+            topPadding: 50
+            horizontalAlignment: HorizontalAlignment.Fill
+            verticalAlignment: VerticalAlignment.Top
         }
         Label {
 //            horizontalAlignment: HorizontalAlignment.Center

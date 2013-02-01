@@ -18,7 +18,6 @@
 #include <bb/cascades/TouchResponse>
 #include <bb/cascades/ImplicitAnimationController>
 #include <bb/cascades/ImageViewLoadEffect>
-#include <QDebug>
 
 
 
@@ -114,9 +113,9 @@ void NuttySlider::setImmediateValue(float value)
     emit immediateValueChanged(m_immediateValue);
 }
 
-float NuttySlider::preferredHeight() const
+void NuttySlider::resetValue()
 {
-    return m_rootContainerHeight;
+    setValue(m_fromValue);
 }
 
 void NuttySlider::handleLayoutFrameUpdated(QRectF frame)

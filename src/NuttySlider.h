@@ -28,23 +28,21 @@ class NuttySlider : public CustomControl {
     Q_PROPERTY(float preferredHeight READ preferredHeight FINAL)
     Q_PROPERTY(float fromValue READ fromValue WRITE setFromValue NOTIFY fromValueChanged FINAL)
     Q_PROPERTY(float toValue READ toValue WRITE setToValue NOTIFY toValueChanged FINAL)
-    Q_PROPERTY(float immediateValue READ immediateValue WRITE setImmediateValue NOTIFY immediateValueChanged FINAL)
+    Q_PROPERTY(float immediateValue READ immediateValue NOTIFY immediateValueChanged FINAL)
 
 public:
     NuttySlider(Container* parent = 0);
+
     float value() const;
-    void setValue(float value);
-
     float fromValue() const;
-    void setFromValue(float value);
-
     float toValue() const;
-    void setToValue(float value);
-
     float immediateValue() const;
-    void setImmediateValue(float value);
 
-    float preferredHeight() const;
+public Q_SLOTS:
+    void setValue(float value);
+    void setFromValue(float value);
+    void setToValue(float value);
+    void resetValue();
 
 Q_SIGNALS:
     void valueChanged(float value);
@@ -62,6 +60,7 @@ private:
     void createConnections();
     void createProgressBar();
     void createHandle();
+    void setImmediateValue(float value);
 
 
     float fromValueToPosX(float value) const;
