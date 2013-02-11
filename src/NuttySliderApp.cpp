@@ -17,7 +17,7 @@ NuttySliderApp::NuttySliderApp(bb::cascades::Application *app)
     qmlRegisterType<CustomSlider>("nutty.ui", 1, 0, "CustomSlider");
     // create scene document from main.qml asset
     // set parent to created document to ensure it exists for the whole application lifetime
-    QmlDocument *qml = QmlDocument::create("asset:///main1.qml").parent(this);
+    QmlDocument *qml = QmlDocument::create("asset:///animations.qml").parent(this);
 
     // create root object for the UI
     AbstractPane *root = qml->createRootObject<AbstractPane>();

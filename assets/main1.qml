@@ -7,7 +7,6 @@ Page {
         id: sliderComponent
         property real smallStepsSliderWidth: 300
         property real deltaValue: 0.05
-//        background: Color.create("#0088cc")
 
         layout: AbsoluteLayout {}
 
